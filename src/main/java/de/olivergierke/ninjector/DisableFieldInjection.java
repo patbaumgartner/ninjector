@@ -16,21 +16,21 @@
 package de.olivergierke.ninjector;
 
 import de.olivergierke.ninjector.DisableFieldInjection.DisableFieldInjectionConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-
 /**
  * Disables field injection for Spring components. Will register infrastructure to reject the instantiation of Spring
  * beans that use injection annotations on fields.
- * 
- * @see http://olivergierke.de/2013/11/why-field-injection-is-evil/
+ * <p>
+ * https://odrotbohm.de/2013/11/why-field-injection-is-evil/
+ *
  * @author Oliver Gierke
  */
 @Target(ElementType.TYPE)
@@ -38,12 +38,12 @@ import org.springframework.context.annotation.Import;
 @Import(DisableFieldInjectionConfiguration.class)
 public @interface DisableFieldInjection {
 
-	@Configuration
-	static class DisableFieldInjectionConfiguration {
+    @Configuration
+    static class DisableFieldInjectionConfiguration {
 
-		@Bean
-		public static FieldInjectionRejectingBeanPostProcessor fieldInjectionRejectionBeanPostProcessor() {
-			return new FieldInjectionRejectingBeanPostProcessor();
-		}
-	}
+        @Bean
+        public static FieldInjectionRejectingBeanPostProcessor fieldInjectionRejectionBeanPostProcessor() {
+            return new FieldInjectionRejectingBeanPostProcessor();
+        }
+    }
 }
