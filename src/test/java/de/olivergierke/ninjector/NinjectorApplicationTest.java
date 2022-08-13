@@ -1,12 +1,15 @@
 package de.olivergierke.ninjector;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Integration tests for {@link DisableFieldInjection}.
@@ -15,22 +18,25 @@ import org.springframework.stereotype.Component;
  */
 public class NinjectorApplicationTest {
 
-	@Configuration
-	@ComponentScan
-	@DisableFieldInjection
-	static class Config {}
+    @Configuration
+    @ComponentScan
+    @DisableFieldInjection
+    static class Config {
+    }
 
-	@SuppressWarnings("resource")
-	@Test(expected = BeanCreationException.class)
-	public void rejectsFieldInjected() {
-		new AnnotationConfigApplicationContext(Config.class);
-	}
+    @SuppressWarnings("resource")
+    @Test
+    public void rejectsFieldInjected() {
+        assertThrows(BeanCreationException.class, () -> new AnnotationConfigApplicationContext(Config.class));
+    }
 
-	@Component
-	static class MyComponent {
-		@Autowired MyOtherComponent myOtherComponent;
-	}
+    @Component
+    static class MyComponent {
+        @Autowired
+        MyOtherComponent myOtherComponent;
+    }
 
-	@Component
-	static class MyOtherComponent {}
+    @Component
+    static class MyOtherComponent {
+    }
 }
