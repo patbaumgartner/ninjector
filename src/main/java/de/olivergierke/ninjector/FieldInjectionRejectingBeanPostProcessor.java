@@ -15,13 +15,6 @@
  */
 package de.olivergierke.ninjector;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationNotAllowedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,55 +25,63 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ReflectionUtils.FieldCallback;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * {@link BeanPostProcessor} to scan bean classes to be created for injection annotations on fields and rejecting the
  * instantiation of those bean types.
- * 
+ *
  * @author Oliver Gierke
  */
 @SuppressWarnings("unchecked")
 public class FieldInjectionRejectingBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter {
 
-	private static final Set<Class<? extends Annotation>> INJECTION_ANNOTATIONS;
-	private static final String ERROR = "Field injection detected at field @%s %s of bean class %s! Use constructor injection instead!";
+    private static final Set<Class<? extends Annotation>> INJECTION_ANNOTATIONS;
+    private static final String ERROR = "Field injection detected at field @%s %s of bean class %s! Use constructor injection instead!";
 
-	static {
+    static {
 
-		Set<Class<? extends Annotation>> annotations = new HashSet<Class<? extends Annotation>>();
+        Set<Class<? extends Annotation>> annotations = new HashSet<Class<? extends Annotation>>();
 
-		annotations.add(Autowired.class);
+        annotations.add(Autowired.class);
 
-		for (String annotationName : Arrays.asList("javax.inject.Inject", "javax.annotation.Resource"))
+        for (String annotationName : Arrays.asList("javax.inject.Inject", "javax.annotation.Resource"))
 
-			try {
-				annotations.add((Class<? extends Annotation>) ClassUtils.forName(annotationName,
-						FieldInjectionRejectingBeanPostProcessor.class.getClassLoader()));
-			} catch (ClassNotFoundException o_O) {}
+            try {
+                annotations.add((Class<? extends Annotation>) ClassUtils.forName(annotationName,
+                        FieldInjectionRejectingBeanPostProcessor.class.getClassLoader()));
+            } catch (ClassNotFoundException o_O) {
+            }
 
-		INJECTION_ANNOTATIONS = Collections.unmodifiableSet(annotations);
-	}
+        INJECTION_ANNOTATIONS = Collections.unmodifiableSet(annotations);
+    }
 
-	/* 
-	 * (non-Javadoc)
-	 * @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter#postProcessBeforeInstantiation(java.lang.Class, java.lang.String)
-	 */
-	@Override
-	public Object postProcessBeforeInstantiation(final Class<?> beanClass, final String beanName) throws BeansException {
+    /*
+     * (non-Javadoc)
+     * @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter#postProcessBeforeInstantiation(java.lang.Class, java.lang.String)
+     */
+    @Override
+    public Object postProcessBeforeInstantiation(final Class<?> beanClass, final String beanName) throws BeansException {
 
-		ReflectionUtils.doWithFields(beanClass, new FieldCallback() {
+        ReflectionUtils.doWithFields(beanClass, new FieldCallback() {
 
-			@Override
-			public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+            @Override
+            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
 
-				for (Class<? extends Annotation> annotationType : INJECTION_ANNOTATIONS) {
-					if (AnnotationUtils.findAnnotation(field, annotationType) != null) {
-						throw new BeanCreationNotAllowedException(beanName,
-								String.format(ERROR, annotationType.getSimpleName(), field.getName(), beanClass.getSimpleName()));
-					}
-				}
-			}
-		});
+                for (Class<? extends Annotation> annotationType : INJECTION_ANNOTATIONS) {
+                    if (AnnotationUtils.findAnnotation(field, annotationType) != null) {
+                        throw new BeanCreationNotAllowedException(beanName,
+                                String.format(ERROR, annotationType.getSimpleName(), field.getName(), beanClass.getSimpleName()));
+                    }
+                }
+            }
+        });
 
-		return null;
-	}
+        return null;
+    }
 }
