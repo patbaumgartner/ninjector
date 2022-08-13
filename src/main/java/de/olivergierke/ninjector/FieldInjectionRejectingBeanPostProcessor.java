@@ -50,7 +50,7 @@ public class FieldInjectionRejectingBeanPostProcessor extends InstantiationAware
 
         annotations.add(Autowired.class);
 
-        for (String annotationName : Arrays.asList("javax.inject.Inject", "javax.annotation.Resource"))
+        for (String annotationName : Arrays.asList("javax.inject.Inject", "jakarta.inject", "javax.annotation.Resource", "jakarta.annotation.Resource"))
 
             try {
                 annotations.add((Class<? extends Annotation>) ClassUtils.forName(annotationName,
