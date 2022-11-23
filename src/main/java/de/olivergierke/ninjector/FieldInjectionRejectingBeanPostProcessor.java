@@ -33,7 +33,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * {@link BeanPostProcessor} to scan bean classes to be created for injection annotations on fields and rejecting the
+ * {@link BeanPostProcessor} to scan bean classes to be created for injection
+ * annotations on fields and rejecting the
  * instantiation of those bean types.
  *
  * @author Oliver Gierke
@@ -50,23 +51,29 @@ public class FieldInjectionRejectingBeanPostProcessor extends InstantiationAware
 
         annotations.add(Autowired.class);
 
-        for (String annotationName : Arrays.asList("javax.inject.Inject", "jakarta.inject", "javax.annotation.Resource", "jakarta.annotation.Resource"))
+        for (String annotationName : Arrays.asList("javax.inject.Inject", "jakarta.inject.Inject",
+                "javax.annotation.Resource", "jakarta.annotation.Resource")) {
 
             try {
                 annotations.add((Class<? extends Annotation>) ClassUtils.forName(annotationName,
                         FieldInjectionRejectingBeanPostProcessor.class.getClassLoader()));
             } catch (ClassNotFoundException o_O) {
             }
+        }
 
         INJECTION_ANNOTATIONS = Collections.unmodifiableSet(annotations);
     }
 
     /*
      * (non-Javadoc)
-     * @see org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter#postProcessBeforeInstantiation(java.lang.Class, java.lang.String)
+     * 
+     * @see org.springframework.beans.factory.config.
+     * InstantiationAwareBeanPostProcessorAdapter#postProcessBeforeInstantiation(
+     * java.lang.Class, java.lang.String)
      */
     @Override
-    public Object postProcessBeforeInstantiation(final Class<?> beanClass, final String beanName) throws BeansException {
+    public Object postProcessBeforeInstantiation(final Class<?> beanClass, final String beanName)
+            throws BeansException {
 
         ReflectionUtils.doWithFields(beanClass, new FieldCallback() {
 
@@ -76,7 +83,8 @@ public class FieldInjectionRejectingBeanPostProcessor extends InstantiationAware
                 for (Class<? extends Annotation> annotationType : INJECTION_ANNOTATIONS) {
                     if (AnnotationUtils.findAnnotation(field, annotationType) != null) {
                         throw new BeanCreationNotAllowedException(beanName,
-                                String.format(ERROR, annotationType.getSimpleName(), field.getName(), beanClass.getSimpleName()));
+                                String.format(ERROR, annotationType.getSimpleName(), field.getName(),
+                                        beanClass.getSimpleName()));
                     }
                 }
             }
