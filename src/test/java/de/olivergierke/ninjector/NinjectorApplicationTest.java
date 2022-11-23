@@ -1,6 +1,5 @@
 package de.olivergierke.ninjector;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @author Oliver Gierke
  */
+@SpringJUnitConfig
 public class NinjectorApplicationTest {
 
     @Configuration
