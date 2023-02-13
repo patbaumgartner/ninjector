@@ -16,8 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @author Oliver Gierke
  */
-@SpringJUnitConfig
-public class NinjectorApplicationTest {
+public class NinjectorApplicationTests {
 
     @Configuration
     @ComponentScan
