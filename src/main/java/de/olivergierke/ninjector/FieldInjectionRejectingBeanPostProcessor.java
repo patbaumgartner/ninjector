@@ -19,7 +19,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationNotAllowedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
+import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
@@ -40,7 +40,7 @@ import java.util.Set;
  * @author Oliver Gierke
  */
 @SuppressWarnings("unchecked")
-public class FieldInjectionRejectingBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter {
+public class FieldInjectionRejectingBeanPostProcessor implements InstantiationAwareBeanPostProcessor {
 
     private static final Set<Class<? extends Annotation>> INJECTION_ANNOTATIONS;
     private static final String ERROR = "Field injection detected at field @%s %s of bean class %s! Use constructor injection instead!";
