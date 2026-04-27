@@ -30,3 +30,24 @@ class ApplicationComponent {
 ```
 
 `@DisableFieldInjection` registers a tiny Spring extension that will pre-process the bean instances about to be created, scan their fields for common injection annotations (e.g. `@Inject`, `@Autowired`, `@Resource`) and reject the bean instantiation right away.
+
+== Prerequisites
+
+* JDK 17 or later
+* Maven 3.9+ (the project does not ship a wrapper)
+* Spring Framework 7.x (managed by the project)
+* JUnit Jupiter 6.x (managed by the project)
+
+== Build and Test
+
+[source,bash]
+----
+mvn verify
+----
+
+This compiles the sources, runs the JUnit Jupiter tests and packages the JAR.
+
+== License
+
+Released under the http://www.apache.org/licenses/LICENSE-2.0[Apache License, Version 2.0].
+
